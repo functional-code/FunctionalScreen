@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Screen Share</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Local Screen Share</h1>
+        
+        <div id="selection-screen">
+            <p>Select your role:</p>
+            <button id="btn-host" class="btn primary">Share Screen (Host)</button>
+            <button id="btn-viewer" class="btn secondary">View Screen (Viewer)</button>
+        </div>
+
+        <div id="host-screen" class="hidden">
+            <h2>Sharing Screen...</h2>
+            <p>Open this URL on your phone: <span id="local-ip">Loading...</span></p>
+            <video id="local-video" autoplay muted playsinline></video>
+        </div>
+
+        <div id="viewer-screen" class="hidden">
+            <h2>Viewing Screen</h2>
+            <video id="remote-video" autoplay playsinline controls></video>
+            <button id="btn-fullscreen" class="btn">Full Screen</button>
+        </div>
+    </div>
+
+    <script src="host.js"></script>
+    <script src="viewer.js"></script>
+    <script>
+        // Simple UI switching logic
+        const selectionScreen = document.getElementById('selection-screen');
+        const hostScreen = document.getElementById('host-screen');
+        const viewerScreen = document.getElementById('viewer-screen');
+        const btnHost = document.getElementById('btn-host');
+        const btnViewer = document.getElementById('btn-viewer');
+
+        btnHost.addEventListener('click', () => {
+            selectionScreen.classList.add('hidden');
+            hostScreen.classList.remove('hidden');
+            startHost(); // Defined in host.js
+        });
+
+        btnViewer.addEventListener('click', () => {
+            selectionScreen.classList.add('hidden');
+            viewerScreen.classList.remove('hidden');
+            startViewer(); // Defined in viewer.js
+        });
+        
+        // Display local IP helper (frontend can't easily know local IP without server help or WebRTC trickery, 
+        // but for now we'll just ask user to look at address bar or server logs)
+        document.getElementById('local-ip').innerText = window.location.host;
+    </script>
+</body>
+</html>
